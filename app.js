@@ -9,11 +9,6 @@ const app = express();
 mongoose.connect('mongodb://0.0.0.0:27017/mestodb');
 
 app.use(bodyParser.json());
-// app.use(bodyParser.urlencoded({ estended: true }));
-
-// app.get('/', (req, res) => {
-//   res.status(200).send({ message: 'Hello, World!' });
-// });
 
 app.use((req, res, next) => {
   req.user = {
@@ -24,5 +19,9 @@ app.use((req, res, next) => {
 
 app.use('/users', require('./routes/users'));
 app.use('/cards', require('./routes/cards'));
+
+app.get('*', (req, res) => {
+  res.status(404).send({ message: 'Страница не найдена' });
+});
 
 app.listen(PORT);
