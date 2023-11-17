@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const helmet = require('helmet');
 
 const { PORT = 3000 } = process.env;
 
@@ -9,6 +10,7 @@ const app = express();
 mongoose.connect('mongodb://0.0.0.0:27017/mestodb');
 
 app.use(bodyParser.json());
+app.use(helmet());
 
 app.use((req, res, next) => {
   req.user = {
