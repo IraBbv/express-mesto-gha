@@ -16,13 +16,6 @@ mongoose.connect('mongodb://0.0.0.0:27017/mestodb');
 app.use(bodyParser.json());
 app.use(helmet());
 
-// app.use((req, res, next) => {
-//   req.user = {
-//     _id: '65562592b806a01417888288',
-//   };
-//   next();
-// });
-
 app.use('*', (req, res) => {
   res.status(404).send({ message: 'Страница не найдена' });
 });

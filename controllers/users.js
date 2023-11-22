@@ -26,6 +26,12 @@ module.exports.getUser = (req, res) => {
     });
 };
 
+module.exports.getCurrentUser = (req, res) => {
+  User.findById(req.user._id)
+    .then((user) => res.status(200).send(user))
+    .catch(() => res.status(500).send({ message: 'На сервере произошла ошибка' }));
+};
+
 module.exports.createUser = (req, res) => {
   const {
     email, password, name, about, avatar,

@@ -21,20 +21,26 @@ module.exports.createCard = (req, res) => {
 };
 
 module.exports.deleteCard = (req, res) => {
-  Card.findByIdAndDelete(req.params.cardId)
+  Card.findById(req.params.cardId)
     .then((card) => {
-      if (!card) {
-        res.status(404).send({ message: 'Карточка с указанным id не найдена' });
-        return;
+      if (card.owner._id !== req.user._id) {
+        res.status(403).send({ message: 'Вы не можете удалить карточку другого пользователя' });
       }
-      res.status(200).send({ message: 'Successfully removed' });
-    })
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        res.status(400).send({ message: 'Некорректный id карточки' });
-      } else {
-        res.status(500).send({ message: 'На сервере произошла ошибка' });
-      }
+      Card.findByIdAndDelete(card._id)
+        .then((theCard) => {
+          if (!theCard) {
+            res.status(404).send({ message: 'Карточка с указанным id не найдена' });
+            return;
+          }
+          res.status(200).send({ message: 'Successfully removed' });
+        })
+        .catch((err) => {
+          if (err.name === 'CastError') {
+            res.status(400).send({ message: 'Некорректный id карточки' });
+          } else {
+            res.status(500).send({ message: 'На сервере произошла ошибка' });
+          }
+        });
     });
 };
 
