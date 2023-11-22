@@ -2,6 +2,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const helmet = require('helmet');
+const userRouter = require('./routes/users');
+const cardRouter = require('./routes/cards');
 
 const { PORT = 3000 } = process.env;
 
@@ -19,8 +21,10 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use('/users', require('./routes/users'));
-app.use('/cards', require('./routes/cards'));
+app.use('/users', userRouter);
+app.use('/cards', cardRouter);
+app.post('/signin', userRouter.login);
+app.post('/signup', userRouter.createUser);
 
 app.use('*', (req, res) => {
   res.status(404).send({ message: 'Страница не найдена' });
