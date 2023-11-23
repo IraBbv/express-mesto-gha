@@ -1,6 +1,9 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
+// const NotFoundError = require('../errors/not-found-error');
+// const ValidationError = require('../errors/validation-error');
+// const CastError = require('../errors/cast-error');
 
 module.exports.getAllUsers = (req, res) => {
   User.find({})
@@ -55,6 +58,8 @@ module.exports.createUser = (req, res) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res.status(400).send({ message: `Переданы некорректные данные: ${err.message}` });
+      } else if (err.code === 11000) {
+        res.status(409).send({ message: 'Пользователь с такой почтой уже зарегистрирован' });
       } else {
         res.status(500).send({ message: 'На сервере произошла ошибка' });
       }
@@ -106,7 +111,7 @@ module.exports.login = (req, res) => {
     .then((user) => {
       const token = jwt.sign(
         { _id: user._id },
-        `${process.env.NODE_ENV === 'production' ? process.env.JWT_SECRET : 'Some-secret-key'}`,
+        '984ce1be708307d41857f5c4f295e5dab0800543ac7ca3b796940b30d4adc7e8',
         { expiresIn: '7d' },
       );
       res.cookie('jwt', token, { maxAge: 3600000 * 24 * 7, httpOnly: true });
