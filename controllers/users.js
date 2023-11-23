@@ -1,7 +1,7 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
-// const NotFoundError = require('../errors/not-found-error');
+const NotFoundError = require('../errors/not-found-error');
 const ValidationError = require('../errors/validation-error');
 const CastError = require('../errors/cast-error');
 
@@ -15,7 +15,7 @@ module.exports.getUser = (req, res, next) => {
   User.findById(req.params.userId)
     .then((user) => {
       if (!user) {
-        next(new ValidationError('Пользователь по указанному id не найден.'));
+        next(new NotFoundError('Пользователь по указанному id не найден.'));
       }
       res.send(user);
     })
@@ -72,7 +72,7 @@ module.exports.updateUserInfo = (req, res, next) => {
   User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
     .then((user) => {
       if (!user) {
-        next(new ValidationError('Пользователь по указанному id не найден.'));
+        next(new NotFoundError('Пользователь по указанному id не найден.'));
       }
       res.send(user);
     })
@@ -91,7 +91,7 @@ module.exports.updateUserAvatar = (req, res, next) => {
   User.findByIdAndUpdate(req.user._id, { avatar }, { new: true, runValidators: true })
     .then((user) => {
       if (!user) {
-        next(new ValidationError('Пользователь по указанному id не найден.'));
+        next(new NotFoundError('Пользователь по указанному id не найден.'));
       }
       res.send(user);
     })
