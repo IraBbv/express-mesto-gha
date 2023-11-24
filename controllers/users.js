@@ -54,7 +54,6 @@ module.exports.createUser = (req, res, next) => {
       avatar: user.avatar,
     }))
     .catch((err) => {
-      // console.log(err.name);
       if (err.name === 'ValidationError') {
         next(new ValidationError(`Переданы некорректные данные: ${err.message}`));
       } else if (err.code === 11000) {
