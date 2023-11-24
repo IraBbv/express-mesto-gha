@@ -113,7 +113,11 @@ module.exports.login = (req, res, next) => {
       res.cookie('jwt', token, { maxAge: 3600000 * 24 * 7, httpOnly: true });
     })
     .catch((err) => {
-      res.status(401).send({ message: err.message });
+      if (err.name === 'ValidationError') {
+        next(new ValidationError(`Переданы некорректные данные: ${err.message}`));
+      } else {
+        next(err);
+      }
     })
     .catch(next);
 };
