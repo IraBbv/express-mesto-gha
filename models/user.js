@@ -44,24 +44,22 @@ const userSchema = new mongoose.Schema(
   { versionKey: false },
 );
 
-userSchema.statics.findUserByCredentials = function (email, password) {
+userSchema.statics.findUserByCredentials = function findUserByCredentials(email, password) {
   return this.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {
-        return Promise.reject(new LoginError('Неверные почта или пароль'));
+        throw new LoginError('Неверные почта или пароль');
       }
+
       return bcrypt.compare(password, user.password)
         .then((matched) => {
           if (!matched) {
-            return Promise.reject(new LoginError('Неверные почта или пароль'));
+            throw new LoginError('Неверные почта или пароль');
           }
+
           return user;
         });
     });
 };
-
-// const urlregex = /http?s:\/\/(?:www\.)?[-a-zA-z0-9@:%._+~#=]{1-256}\.
-// [a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_+.~#?&/=]*)$/.test();
-// console.log(urlregex);
 
 module.exports = mongoose.model('user', userSchema);

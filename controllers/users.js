@@ -4,7 +4,6 @@ const User = require('../models/user');
 const NotFoundError = require('../errors/not-found-error');
 const ValidationError = require('../errors/validation-error');
 const CastError = require('../errors/cast-error');
-const AuthorizationError = require('../errors/authorization-error');
 
 module.exports.getAllUsers = (req, res, next) => {
   User.find({})
@@ -104,7 +103,6 @@ module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
 
   return User.findUserByCredentials(email, password)
-    .orFail(new AuthorizationError('Неверные почта или пароль.'))
     .then((user) => {
       const token = jwt.sign(
         { _id: user._id },
