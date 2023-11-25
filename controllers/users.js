@@ -4,6 +4,7 @@ const User = require('../models/user');
 const NotFoundError = require('../errors/not-found-error');
 const ValidationError = require('../errors/validation-error');
 const CastError = require('../errors/cast-error');
+const DuplicateKeyError = require('../errors/duplicate-key-error');
 
 module.exports.getAllUsers = (req, res, next) => {
   User.find({})
@@ -57,7 +58,7 @@ module.exports.createUser = (req, res, next) => {
       if (err.name === 'ValidationError') {
         next(new ValidationError(`Переданы некорректные данные: ${err.message}`));
       } else if (err.code === 11000) {
-        res.status(409).send({ message: 'Пользователь с такой почтой уже зарегистрирован' });
+        next(new DuplicateKeyError('Пользователь с такой почтой уже зарегистрирован'));
       } else {
         next(err);
       }
@@ -109,7 +110,8 @@ module.exports.login = (req, res, next) => {
         '984ce1be708307d41857f5c4f295e5dab0800543ac7ca3b796940b30d4adc7e8',
         { expiresIn: '7d' },
       );
-      res.cookie('jwt', token, { maxAge: 3600000 * 24 * 7, httpOnly: true });
+      res.status(200).send({ token });
+      // res.status(200).cookie('jwt', token, { maxAge: 3600000 * 24 * 7, httpOnly: true });
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
