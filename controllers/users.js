@@ -24,8 +24,8 @@ module.exports.getUser = (req, res, next) => {
       } else {
         next(err);
       }
-    })
-    .catch(next);
+    });
+  // .catch(next);
 };
 
 module.exports.getCurrentUser = (req, res, next) => {
@@ -62,8 +62,8 @@ module.exports.createUser = (req, res, next) => {
       } else {
         next(err);
       }
-    })
-    .catch(next);
+    });
+  // .catch(next);
 };
 
 module.exports.updateUserInfo = (req, res, next) => {
@@ -79,8 +79,8 @@ module.exports.updateUserInfo = (req, res, next) => {
       } else {
         next(err);
       }
-    })
-    .catch(next);
+    });
+  // .catch(next);
 };
 
 module.exports.updateUserAvatar = (req, res, next) => {
@@ -96,8 +96,8 @@ module.exports.updateUserAvatar = (req, res, next) => {
       } else {
         next(err);
       }
-    })
-    .catch(next);
+    });
+  // .catch(next);
 };
 
 module.exports.login = (req, res, next) => {
@@ -119,6 +119,6 @@ module.exports.login = (req, res, next) => {
       } else {
         next(err);
       }
-    })
-    .catch(next);
+    });
+  // .catch(next);
 };
