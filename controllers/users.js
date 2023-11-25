@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const NotFoundError = require('../errors/not-found-error');
 const ValidationError = require('../errors/validation-error');
+const AuthorizationError = require('../errors/authorization-error');
 const CastError = require('../errors/cast-error');
 const DuplicateKeyError = require('../errors/duplicate-key-error');
 
@@ -104,13 +105,13 @@ module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
 
   return User.findUserByCredentials(email, password)
+    .orFail(new AuthorizationError('Неверные логин или пароль.'))
     .then((user) => {
       const token = jwt.sign(
         { _id: user._id },
         '984ce1be708307d41857f5c4f295e5dab0800543ac7ca3b796940b30d4adc7e8',
         { expiresIn: '7d' },
       );
-      // res.status(200).send({ token });
       res.cookie('jwt', token, { maxAge: 3600000 * 24 * 7, httpOnly: true });
     })
     .catch((err) => {
