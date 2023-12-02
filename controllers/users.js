@@ -111,7 +111,7 @@ module.exports.login = (req, res, next) => {
         { expiresIn: '7d' },
       );
       res.cookie('jwt', token, { maxAge: 3600000, httpOnly: true })
-        .end();
+        .send({ message: 'Успшный успех!' });
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
