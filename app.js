@@ -23,7 +23,7 @@ const limiter = rateLimit({
 });
 
 const app = express();
-app.use(cookieParser);
+app.use(cookieParser());
 
 mongoose.connect('mongodb://0.0.0.0:27017/mestodb');
 
