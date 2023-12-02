@@ -27,7 +27,7 @@ mongoose.connect('mongodb://0.0.0.0:27017/mestodb');
 
 app.use(bodyParser.json());
 app.use(helmet());
-app.use(limiter());
+app.use(limiter);
 
 app.post('/', (req, res) => {
   res.send('Hello, world!');
