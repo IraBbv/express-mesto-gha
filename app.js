@@ -5,8 +5,10 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
-const { errors } = require('celebrate');
+const { celebrate, Joi, errors } = require('celebrate');
 
+const { login, createUser } = require('./controllers/users');
+const urlRegEx = require('./utils/constants');
 const auth = require('./middlewares/auth');
 const errorHandler = require('./middlewares/error-handler');
 const NotFoundError = require('./errors/not-found-error');
@@ -33,8 +35,22 @@ app.post('/', (req, res) => {
   res.send('Hello, world!');
 });
 
-app.use('/signup', require('./routes/signup'));
-app.use('/singin', require('./routes/signin'));
+app.post('/signup', celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required().email(),
+    password: Joi.string().required().min(8),
+    name: Joi.string().min(2).max(30),
+    about: Joi.string().min(2).max(30),
+    avatar: Joi.string().pattern(urlRegEx),
+  }).unknown(true),
+}), createUser);
+
+app.post('/signin', celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required().email(),
+    password: Joi.string().required().min(8),
+  }).unknown(true),
+}), login);
 
 app.use(auth);
 app.use('/users', require('./routes/users'));
