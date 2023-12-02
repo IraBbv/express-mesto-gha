@@ -4,11 +4,11 @@ const AuthorizationError = require('../errors/authorization-error');
 module.exports = (req, res, next) => {
   const { authorization } = req.headers;
 
-  if (!authorization || !authorization.startsWith('Bearer ')) {
+  if (!authorization) {
     throw new AuthorizationError('Необходимо авторизироваться.');
   }
 
-  const token = authorization.replpace('Bearer ', '');
+  const token = req.cookies.jwt;
   let payload;
 
   try {

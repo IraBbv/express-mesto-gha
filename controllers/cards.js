@@ -28,10 +28,11 @@ module.exports.createCard = (req, res, next) => {
 module.exports.deleteCard = (req, res, next) => {
   Card.findById(req.params.cardId)
     .then((card) => {
-      if (card.owner._id !== req.user._id) {
+      if (card.owner._id.toString() !== req.user._id) {
         next(new AccessError('Вы не можете удалить карточку другого пользователя.'));
+        return;
       }
-      Card.findByIdAndDelete(card._id)
+      Card.deleteOne(card)
         .orFail(new NotFoundError('Карточка с указанным id не найдена.'))
         .then(() => {
           res.status(200).send({ message: 'Карточка удалена.' });

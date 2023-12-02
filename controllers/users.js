@@ -110,7 +110,8 @@ module.exports.login = (req, res, next) => {
         '984ce1be708307d41857f5c4f295e5dab0800543ac7ca3b796940b30d4adc7e8',
         { expiresIn: '7d' },
       );
-      res.cookie('jwt', token, { maxAge: 3600000, httpOnly: true });
+      res.cookie('jwt', token, { maxAge: 3600000, httpOnly: true })
+        .end();
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
